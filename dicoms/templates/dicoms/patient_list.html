@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+List of patients
+{% endblock %}
+{% load crispy_forms_tags %}
+{% load my_tags %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <h1>List of registered patients</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="general-container">
+<form method="get">
+    {{ filterset.form|crispy }}
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+<p><a class="btn btn-primary" href="{% url 'dicoms:patient_add' %}">Register new patient </a>
+</div>
+<div class="col-md-9">
+    <div class="general-container">
+        {% if patients_list %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <th colspan="2">Patient</th>
+                        <th colspan="2">Main doctor</th>
+                        <th rowspan="2"><a href="?{% url_replace request 'order' 'birth_date' %}">Birth year</a>{% order_sign request 'birth_date' %}</th>
+                        <th rowspan="2"><a href="?{% url_replace request 'order' 'gender' %}">Gender</a>{% order_sign request 'gender' %}</th>
+                    </tr>
+                    <tr>
+                        <th><a href="?{% url_replace request 'order' 'first_name' %}">First name</a>{% order_sign request 'first_name' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'last_name' %}">Last name</a>{% order_sign request 'last_name' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'main_doctor__first_name' %}">First name</a>{% order_sign request 'main_doctor__first_name' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'main_doctor__last_name' %}">Last name</a>{% order_sign request 'main_doctor__last_name' %}</th>
+                    </tr>
+                    {% for patient in patients_list  %}
+                    <tr>
+                        <td><a href="{% url 'dicoms:patient_detail' pk=patient.id %}">{{patient.first_name}} </a></td>
+                        <td><a href="{% url 'dicoms:patient_detail' pk=patient.id %}">{{patient.last_name}} </a></td>
+                        <td>{% if patient.main_doctor %}<a href="{% url 'users:user_detail' pk=patient.main_doctor.id %}">{{patient.main_doctor.first_name}} </a> {% else %}N/A{% endif %} </td>
+                        <td>{% if patient.main_doctor %}<a href="{% url 'users:user_detail' pk=patient.main_doctor.id %}">{{patient.main_doctor.last_name}} </a> {% else %}N/A{% endif %} </td>
+                        <td>{{ patient.birth_date | date:"Y" }} </td>
+                        <td>{{patient.get_gender_display}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% else %}
+            No patients found
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% if is_paginated %}
+    {% include "includes/pagination.html" %}
+{% endif %}
+
+{% endblock %}

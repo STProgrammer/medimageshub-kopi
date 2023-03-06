@@ -1,0 +1,5 @@
+You are no longer registered as main doctor for {{patient}}
+
+The new main doctor is {{new_doctor}}
+    
+    

@@ -1,0 +1,8 @@
+
+<h1>{{dicom_file.owner}} shared a new DICOM file with you</h1>
+
+<p>It belongs to the patient {{dicom_file.patient}}
+    
+<p>Click on the link below to start reviewing the image(s):
+
+<p><a href={{host}}{% url 'dicoms:dicom_detail' pk=dicom_file.id %}>{{dicom_file}}</a>

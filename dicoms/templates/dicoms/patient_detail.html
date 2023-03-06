@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Patient details for {{patient.get_full_name}}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<h1>Details for patient {{patient.get_full_name}}</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-5">
+		<div class="general-container">
+			<div class="table-responsive">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>First name: </td>
+							<td>{{patient.first_name}}</td>
+						</tr>
+						<tr>
+							<td>Last name: </td>
+							<td>{{patient.last_name}}</td>
+						</tr>
+						<tr>
+							<td>Main doctor: </td>
+							<td>{% if patient.main_doctor %}<a href="{% url 'users:user_detail' pk=patient.main_doctor.id %}">{{patient.main_doctor.get_full_name}} </a> {% else %}None{% endif %} </td>
+						</tr>
+						<tr>
+							<td>Birth date: </td>
+							<td>{{patient.birth_date}}</td>
+						</tr>
+						<tr>
+							<td>Gender: </td>
+							<td>{{patient.get_gender_display}}</td>
+						</tr>
+						<tr>
+							<td>Height: </td>
+							<td>{{patient.height}} CMs</td>
+						</tr>
+						<tr>
+							<td>Country: </td>
+							<td>{{patient.get_country_display}}</td>
+						</tr>
+						<tr>
+							<td>City:  </td>
+							<td>{{patient.city}}</td>
+						</tr>
+						<tr>
+							<td>Postal code: </td>
+							<td>{{patient.postal_code}}</td>
+						</tr>
+						<tr>
+							<td>Address: </td>
+							<td>{{patient.address}}</td>
+						</tr>
+						<tr>
+							<td>Phone nr: </td>
+							<td>{{patient.phone_nr}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% if user.id == patient.main_doctor.id %}
+<p> <a class="btn btn-primary" href="{% url 'dicoms:patient_update' pk=patient.id %}" role="button">Update patient</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+
+{{comment.author}} made a new comment on {{comment.dicom_file}} 
+which is about the patient {{comment.dicom_file.patient}}
+
+Comment time is: {{comment.comment_time}}
+
+The text of comment is below:
+{{comment.comment}}
+
+{% if has_image %}
+The comment has some images which can't be viewed in email.
+So you need to visit the website to view the image.
+{% endif %}
+
+Visit the url below to view the dicom file:
+
+{{host}}{% url 'dicoms:dicom_detail' pk=comment.dicom_file.id %}

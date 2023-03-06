@@ -1,0 +1,79 @@
+<!--users/templates/users/dashboard.html-->
+
+{% extends 'base.html' %}
+
+{% block title %}
+dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <h1>Dashboard for {{ user.get_full_name }}</h1>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="general-container">
+            <h4 class="table-header">Latest files shared</h4>
+            {% if latest_dicoms %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <th>Patient name</th>
+                            <th>Picture date</th>
+                            <th>Shared time</th>
+                            <th>File type</th>
+                        </tr>
+                        {% for dicom in latest_dicoms  %}
+                        <tr>
+                            <td><a href="{% url 'dicoms:dicom_detail' pk=dicom.dicomfile.id %}">{{dicom.dicomfile.file_title}}</a></td>
+                            <td><a href="{% url 'dicoms:patient_detail' pk=dicom.dicomfile.patient.id %}">{{dicom.dicomfile.patient.get_full_name}}</a></td>
+                            <td>{{dicom.dicomfile.picture_date}}</td>
+                            <td>{{dicom.added_time}}</td>
+                            <td>{{dicom.dicomfile.extension}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            No shared files
+            {% endif %}
+        </div>
+        
+    </div>
+    <div class="col-md-6">
+        
+        <div class="general-container">
+            
+            <h4 class="table_header">Latest comments</h4>
+            {% if latest_comments %}
+                {% for comment in latest_comments %}
+                <div class="comments">
+                <p>
+                <br>DICOM file name: <a href="{% url 'dicoms:dicom_detail' pk=comment.dicom_file.id %}">{{comment.dicom_file.file_title}}</a>
+                <br>Author: <a href="{% url 'users:user_detail' pk=comment.author.id %}">{{comment.author.get_full_name}}</a>  Date: {{comment.comment_time}}
+                {% if comment.image_url %}<br><img src="{{ comment.image_url.url | safe}}" alt="Uploaded by {{comment.author}}"  class="comment-image">{% endif %}
+                <br>{{comment.comment}}
+                    {% if user.id == comment.author.id %}
+                    <br><a href="{% url 'dicoms:comment_delete' pk=comment.id %}" class="text-danger">Delete comment</a>
+                    {% endif %}
+                </p>
+            </div>
+                {% endfor %}
+                {% else %}
+                No comments
+                {% endif %}
+                
+        </div>
+            </div>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,4 @@
+<p>You are no longer registered as main doctor for <a href="{{host}}{% url 'dicoms:patient_detail' pk=patient.id %}">{{patient}}</a> 
+
+<p>The new main doctor is <a href="{{host}}{% url 'users:user_detail' pk=new_doctor.id %}">{{new_doctor}}</a>
+

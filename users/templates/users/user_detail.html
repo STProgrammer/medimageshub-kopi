@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+User details for {{user.get_full_name}}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<h1>Details for {{user.get_full_name}}</h1>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-5">
+		<div class="general-container">
+			<div class="table-responsive">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>First name: </td>
+							<td>{{user.first_name}}</td>
+						</tr>
+						<tr>
+							<td>Last name: </td>
+							<td>{{user.last_name}}</td>
+						</tr>
+						<tr>
+							<td>Profession title: </td>
+							<td>{{user.profession_title}}</td>
+						</tr>
+						<tr>
+							<td>Workplace: </td>
+							<td>{{user.workplace}}</td>
+						</tr>
+						<tr>
+							<td>Country: </td>
+							<td>{{user.get_country_display}}</td>
+						</tr>
+						<tr>
+							<td>City: </td>
+							<td>{{user.city}}</td>
+						</tr>
+						<tr>
+							<td>Postal code: </td>
+							<td>{{user.postal_code}}</td>
+						</tr>
+						<tr>
+							<td>Address: </td>
+							<td>{{user.address}}</td>
+						</tr>
+						<tr>
+							<td>Phone nr: </td>
+							<td>{{user.phone_nr}}</td>
+						</tr>
+						<tr>
+							<td>Birth date: </td>
+							<td>{{user.birth_date}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<br><a class="btn btn-primary" href="{% url 'password_change' %}">Change password</a>
+	</div>
+</div>
+
+
+
+
+
+{% endblock %}

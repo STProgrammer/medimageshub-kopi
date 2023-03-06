@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Share DICOM file
+{% endblock %}
+
+{% block extraloads %}
+{{ form.media.css }}
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Share DICOM file {{dicom.dicomfile.file_title}}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="general-container">
+            <form enctype="multipart/form-data" method="POST" onsubmit="return confirm('Are you sure to give access on the resources to the selected persons (if any)?');">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="field-wrapper">
+                    {{ field.errors }}
+                    {{ field|as_crispy_field }}
+                </div>
+                {% endfor %}
+                <input type="submit" value='SHARE' class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{{ form.media.js }}
+
+{% endblock %}

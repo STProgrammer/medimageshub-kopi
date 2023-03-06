@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Register new patient
+{% endblock %}
+
+{% block extraloads %}
+{{ form.media.css }}
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Register new patient</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">   
+        <div class="general-container">
+            <form method="POST" class="form" onsubmit="return confirm('Are all the information on the patient correct?');">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="field-wrapper">
+                    {{ field.errors }}
+                    {{ field|as_crispy_field }}
+                </div>
+            {% endfor %}
+                <input type="submit" value='REGISTER' class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{{ form.media.js }}
+
+{% endblock %}
+
+
+

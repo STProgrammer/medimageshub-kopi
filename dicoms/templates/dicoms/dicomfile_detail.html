@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+DICOM file details for {{dicomfile.file_title}}
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>DICOM file {{dicomfile.file_title}}</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="general-container">
+            <h3>Details for Dicom File</h3>
+            
+            <br><b>Title: {{dicomfile.file_title}}</b>
+            <br>Uploaded by: <a href="{% url 'users:user_detail' pk=dicomfile.owner.id %}">{{dicomfile.owner.get_full_name}}</a>
+            <br>Modality: {{dicomfile.modality}}
+            <br>File size: {{ dicomfile.file_url.size|filesizeformat }}
+            <br>Description: {{dicomfile.description}}
+            <br>Extension: {{dicomfile.extension}}
+            
+            {% if dicomfile.extension|lower == '.zip' %}
+            <p>
+                <br><b>1.</b> Download the ZIP file below:
+                <br><a href="{{dicomfile.file_url.url | safe}}">Download {{dicomfile.file_title}} ZIP file</a> 
+                <br>(link valid only one hour, please refresh the page if the link is outdated)
+                <br><b>2.</b> Open the DICOM viewer and upload the ZIP file on the DICOM Viewer by clicking "open" and "file" on the left navigation bar.
+                <br><a href="{% url 'dicoms:dicom_study' pk=0 %}" target="_blank" class="btn btn-primary" role="button" data-bs-toggle="button">Open DICOM viewer</a></p>
+
+            {% else %}
+            <p><a href="{% url 'dicoms:dicom_study' pk=dicomfile.id %}" target="_blank"  class="btn btn-primary" role="button" data-bs-toggle="button">Examine image(s)</a></p>
+            {% endif %}
+            
+            
+            <h3> Shared with: </h3>
+            <p id="shared-with-list">
+            {% for shared_user in dicomfile.access.all %}
+            <a href="{% url 'users:user_detail' pk=user.id %}">{{shared_user}}</a>, 
+            {% endfor %}
+            {% if user.id == dicomfile.owner.id %}
+            <br><a href="{% url 'dicoms:dicom_update' pk=dicomfile.id %}" class="btn btn-primary" role="button" data-bs-toggle="button">Change who can view this</a>
+            {% endif %}
+            <h3> Add comment: </h3>
+            <form action="{% url 'dicoms:comment_post' pk=dicomfile.id %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in comment_form %}
+                <div class="field-wrapper">
+                    {{ field.errors }}
+                    {{ field|as_crispy_field }}
+                </div>
+            {% endfor %}
+                <input type="submit" value='SUBMIT' class="btn btn-primary">
+            </form>
+
+
+            </div>
+            {% if user.id == dicomfile.owner.id %}
+            <p> <a class="btn btn-danger" href="{% url 'dicoms:dicom_delete' pk=dicomfile.id %}" role="button">Delete file</a>
+            {% endif %}
+    </div>
+    <div class="col-md-7">
+<div class="general-container">
+<h3> Comments: </h3>
+{% if not page_obj %}
+No comments
+{% endif %}
+{% for comment in page_obj %}
+<p>
+<br><a href="{% url 'users:user_detail' pk=comment.author.id %}">{{comment.author.get_full_name}}</a>  Date: {{comment.comment_time}}
+{% if comment.image_url %}<br><img src="{{ comment.image_url.url | safe}}" alt="Uploaded by {{comment.author}}" class="comment-image">{% endif %}
+<br>{{comment.comment}}
+    {% if user.id == comment.author.id %}
+    <br><a href="{% url 'dicoms:comment_delete' pk=comment.id %}" class="text-danger">Delete comment</a>
+    {% endif %}
+</p>
+{% endfor %}
+</div>
+{% if is_paginated %}
+    {% include "includes/pagination.html" %}
+{% endif %}
+</div>
+</div>
+
+{% endblock %}

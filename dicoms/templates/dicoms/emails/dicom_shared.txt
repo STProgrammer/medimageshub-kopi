@@ -1,0 +1,8 @@
+
+{{dicom_file.owner}} shared a new DICOM file with you
+
+It belongs to the patient {{dicom_file.patient}}
+
+Visit the url below to start reviewing the image(s):
+
+{{host}}{% url 'dicoms:dicom_detail' pk=dicom_file.id %}

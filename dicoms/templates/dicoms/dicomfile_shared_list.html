@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Shared DICOM files
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load my_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <h1>List of DICOM files shared with me</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="general-container">
+<form method="get">
+    {{ filterset.form|crispy }}
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+</div>
+</div>
+<div class="col-md-9">
+    <div class="general-container">
+        {% if shared_list %}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th rowspan="2"><a href="?{% url_replace request 'order' 'dicomfile__file_title' %}">File title</a>{% order_sign request 'dicomfile__file_title' %}</th>
+                <th colspan="2">Patient</th>
+                <th rowspan="2"><a href="?{% url_replace request 'order' 'dicomfile__picture_date' %}">Picture date</a>{% order_sign request 'dicomfile__picture_date' %}</th>
+                <th rowspan="2"><a href="?{% url_replace request 'order' 'added_time' %}">Shared time</a>{% order_sign request 'added_time' %}</th>
+                <th rowspan="2">File type</th>
+            </tr>
+            <tr>
+                <th><a href="?{% url_replace request 'order' 'dicomfile__patient__first_name' %}">Patient first name</a>{% order_sign request 'dicomfile__patient__first_name' %}</th>
+                <th><a href="?{% url_replace request 'order' 'dicomfile__patient__last_name' %}">Patient last name</a>{% order_sign request 'dicomfile__patient__last_name' %}</th>
+            </tr>
+            {% for dicom in shared_list %}
+            <tr>
+                <td><a href="{% url 'dicoms:dicom_detail' pk=dicom.dicomfile.id %}">{{dicom.dicomfile.file_title}}</a></td>
+                <td><a href="{% url 'dicoms:patient_detail' pk=dicom.dicomfile.patient.id %}">{{dicom.dicomfile.patient.first_name}}</a></td>
+                <td><a href="{% url 'dicoms:patient_detail' pk=dicom.dicomfile.patient.id %}">{{dicom.dicomfile.patient.last_name}}</a></td>
+                <td>{{dicom.dicomfile.picture_date}}</td>
+                <td>{{dicom.added_time}}</td>
+                <td>{{dicom.dicomfile.extension}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+No files found
+{% endif %}
+</div>
+</div>
+</div>
+
+
+{% if is_paginated %}
+    {% include "includes/pagination.html" %}
+{% endif %}
+
+{% endblock %}

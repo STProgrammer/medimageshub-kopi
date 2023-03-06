@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+List of users
+{% endblock %}
+{% load crispy_forms_tags %}
+{% load my_tags %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <h1>List of users of this system</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="general-container">
+            <form method="get">
+                {{ filterset.form|crispy }}
+                <button type="submit" class="btn btn-primary">Search</button>
+              </form>
+            
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="general-container">
+                {% if user %}
+            <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <th><a href="?{% url_replace request 'order' 'first_name' %}">First name</a>{% order_sign request 'first_name' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'last_name' %}">Last name</a>{% order_sign request 'last_name' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'profession_title' %}">Profession title</a>{% order_sign request 'profession_title' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'workplace' %}">Workplace</a>{% order_sign request 'workplace' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'country' %}">Country</a>{% order_sign request 'country' %}</th>
+                        <th><a href="?{% url_replace request 'order' 'city' %}">City</a>{% order_sign request 'city' %}</th>
+                    </tr>
+                    {% for user in users_list %}
+                    <tr>
+                        <td><a href="{% url 'users:user_detail' pk=user.id %}">{{user.first_name}} </a></td>
+                        <td><a href="{% url 'users:user_detail' pk=user.id %}">{{user.last_name}} </a></td>
+                        <td>{{user.profession_title}}</td>
+                        <td>{{user.workplace}}</td>
+                        <td>{{user.get_country_display}}</td>
+                        <td>{{user.city}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            {% else %}
+            No user found
+            {% endif %}
+            </div>
+    </div>
+</div>
+
+
+
+{% if is_paginated %}
+    {% include "includes/pagination.html" %}
+{% endif %}
+
+{% endblock %}
