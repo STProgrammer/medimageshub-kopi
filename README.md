@@ -19,5 +19,4 @@ You need to make changes in the Dockerfile too.
 
 The DICOM viewer is built on JavaScript, and is taken from another repository.
 
-To use the application you need to register admin user first to login. 
-Use the command `python manage.py createsuperuser`
+To use the application you need to register admin user first on terminal.
